@@ -1,0 +1,36 @@
+<h3>Загрузка нового сервиса в платформу</h3>
+<form action="" id="service_form">
+    Название(латинские буквы + цифры):<br>
+    <input type="text" name="name" id="name" pattern="^[a-zA-Z0-9]+$" required><br>
+    Порт(цифры):<br>
+    <input type="number" name="port" id="port" required><br>
+    Тип:<br> 
+    <select name="type" id="type">
+        <option>API</option>
+        <option>APP</option>
+    </select><br>
+    Точка входа(начальный скрипт XXX.js):<br>
+    <input type="text" name="entrypoint" id="entrypoint" pattern="^[a-zA-Z0-9]+.{1}j{1}s{1}" required><br>
+    
+    Архив модуля(zip):<br><input type="file" name="f" id="file" accept=".zip">
+    <br><br>
+
+    
+</form>
+
+    <button onclick="send()">
+        Отправить
+    </button>
+
+<br>
+____________________________________________________
+
+<br>
+
+Структура файла zip:
+<br>
+icon.jpg - иконка сервиса(64х64) <br>
+Далее стандартная структура Swagger сервиса, начальный скрипт *.js - указан в поле "Точка входа"<br>
+Порт, на котором запускается скрипт - указан в поле "Порт"
+
+

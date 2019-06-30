@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script
+            src="https://code.jquery.com/jquery-1.12.4.min.js"
+        ></script>
+        <script>
+            function loadModule() {
+                $.ajax({
+                    type: "get",
+                    //async: false,
+                    url: "/loadModule",
+                    //headers: {"Access-Control-Allow-Origin": "*"},
+                    success: function (data) {
+                        //alert(data);
+                        document.getElementById("content").innerHTML = data;
+                    }
+                });
+
+
+            }
+
+            function send() {
+
+
+                var name = document.getElementById('name');
+                var entrypoint = document.getElementById('entrypoint');
+
+                if (!name.validity.valid) {
+                    alert('Введите имя в правильном формате!');
+                    return;
+                }
+
+                if (!entrypoint.validity.valid) {
+                    alert('Введите точку входа в правильном формате!');
+                    return;
+                }
+
+                var file = document.getElementById('file');
+                var formData = new FormData();
+                if (file.files.length) {
+                    formData.append('file', file.files[0]);
+
+
+                    $.ajax({
+                        type: "post",
+                        //async: false,
+                        url: "/upload",
+                        contentType: 'multipart/form-data',
+                        //headers: {"Access-Control-Allow-Origin": "*"},
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                        success: function (data) {
+                            var parcel = {};
+                            parcel.name = $("#name").val();
+                            parcel.port = $("#port").val();
+                            parcel.type = $("#type").val();
+                            parcel.entrypoint = $("#entrypoint").val();
+
+                            $.ajax({
+                                type: "post",
+                                //async: false,
+                                url: "/table/servicelist/action/post",
+                                //headers: {"Access-Control-Allow-Origin": "*"},
+                                data: parcel,
+                                success: function (data1) {
+//                                alert(data);
+//                                document.getElementById("content").innerHTML = "";
+                                    if (data1.indexOf('err') === -1) {
+                                        var unzipdata = {};
+                                        unzipdata.src = data;
+                                        unzipdata.dest = "services/" + $("#name").val();
+                                        var file = document.getElementById('file');
+                                        unzipdata.origzipname = file.files[0].name;
+                                        
+
+                                        $.ajax({
+                                            type: "post",
+                                            //async: false,
+                                            url: "/unzip",
+                                            //headers: {"Access-Control-Allow-Origin": "*"},
+                                            data: unzipdata,
+                                            success: function (data2) {
+                                                alert(data2);
+                                                document.getElementById("content").innerHTML = "";
+
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        alert(data1);
+                                    }
+
+                                }
+                            });
+
+
+
+
+
+
+                        }
+                    });
+                }
+
+
+
+
+
+            }
+        </script>
+    </head>
+    <body>
+        <button  onclick="loadModule();">
+            Загрузка сервиса
+        </button>
+        <div id="content">
+        </div>
+    </body>
+</html>
