@@ -14,11 +14,12 @@ var unzip = require('unzip');
 const path = require('path');
 const multer = require("multer");
 var upload = multer({dest: 'uploads/'});
+const YAML = require('yamljs');
 
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+const swaggerDocument = YAML.load('./services/books/api/swagger/swagger.yaml');
  
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 
 var app = express();
@@ -35,7 +36,7 @@ var mySqlServerHost = 'localhost';
 
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded({extended: false})); // to support URL-encoded bodies
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 
@@ -71,7 +72,7 @@ app.post('/table/:tableName/action/:action', function (req, res) {
     var con = mysql.createConnection({
         host: mySqlServerHost,
         user: 'root',
-        password: 'root',
+        password: 'death666',
         database: 'appplatform'
 
 
