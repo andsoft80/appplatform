@@ -92,7 +92,7 @@ app.post('/table/:tableName/action/:action', function (req, res) {
     var con = mysql.createConnection({
         host: mySqlServerHost,
         user: 'root',
-        password: 'death666',
+        password: 'root',
         database: 'appplatform'
 
 
@@ -100,6 +100,7 @@ app.post('/table/:tableName/action/:action', function (req, res) {
     con.connect(function (err) {
         if (err)
             throw err;
+        console.log('MySQL Connected!');
 
     });
 
@@ -194,6 +195,8 @@ app.post('/table/:tableName/action/:action', function (req, res) {
             if (err)
                 res.end(JSON.stringify(err));
             res.end(JSON.stringify(result));
+           
+            console.log(JSON.stringify(result));
 
         });
 

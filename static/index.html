@@ -12,7 +12,30 @@ and open the template in the editor.
         <script
             src="https://code.jquery.com/jquery-1.12.4.min.js"
         ></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+
+        <script type="text/javascript"  src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
         <script>
+            $(document).ready(function () {
+                
+                $('#services_tab').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '/table/servicelist/action/get',
+                        type: 'POST'
+                        
+                    },
+                    columns: [
+                        {data: 'id'},
+                        {data: 'name'},
+                        {data: 'port'},
+                        {data: 'type'},
+                        {data: 'entrypoint'},
+                    ]
+                });
+            });
             function loadModule() {
                 $.ajax({
                     type: "get",
@@ -81,7 +104,7 @@ and open the template in the editor.
                                         unzipdata.dest = "services/" + $("#name").val();
                                         var file = document.getElementById('file');
                                         unzipdata.origzipname = file.files[0].name;
-                                        
+
 
                                         $.ajax({
                                             type: "post",
@@ -95,8 +118,7 @@ and open the template in the editor.
 
                                             }
                                         });
-                                    }
-                                    else{
+                                    } else {
                                         alert(data1);
                                     }
 
@@ -125,5 +147,7 @@ and open the template in the editor.
         </button>
         <div id="content">
         </div>
+        <table id="services_tab">
+        </table>
     </body>
 </html>
