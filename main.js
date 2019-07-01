@@ -18,7 +18,7 @@ const YAML = require('yamljs');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = YAML.load('./services/books/api/swagger/swagger.yaml');
- 
+
 
 
 
@@ -36,7 +36,27 @@ var mySqlServerHost = 'localhost';
 
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded({extended: false})); // to support URL-encoded bodies
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const DisableTryItOutPlugin = function () {
+    return {
+        statePlugins: {
+            spec: {
+                wrapSelectors: {
+                    allowTryItOutFor: () => () => false
+                }
+            }
+        }
+    }
+}
+
+const options = {
+    swaggerOptions: {
+        plugins: [
+            DisableTryItOutPlugin
+        ]
+    }
+};
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 
 
@@ -225,8 +245,8 @@ app.post('/unzip', function (req, res) {
     var source = req.body.src;
     var dest = req.body.dest;
     var origzipname = req.body.origzipname;
-    
-    var dn = origzipname.substring(0, origzipname.length-4);
+
+    var dn = origzipname.substring(0, origzipname.length - 4);
 
     //fs.createReadStream(source).pipe(unzip.Extract({path: dest}));
     var zip = require("machinepack-zip");
@@ -257,19 +277,5 @@ app.post('/unzip', function (req, res) {
         },
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
-
 });
+
