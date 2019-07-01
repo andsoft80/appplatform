@@ -92,7 +92,7 @@ app.post('/table/:tableName/action/:action', function (req, res) {
     var con = mysql.createConnection({
         host: mySqlServerHost,
         user: 'root',
-        password: 'root',
+        password: 'death666',
         database: 'appplatform'
 
 

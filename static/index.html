@@ -12,29 +12,57 @@ and open the template in the editor.
         <script
             src="https://code.jquery.com/jquery-1.12.4.min.js"
         ></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" >
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 
         <script type="text/javascript"  src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
         <script>
-            $(document).ready(function () {
-                
-                $('#services_tab').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: '/table/servicelist/action/get',
-                        type: 'POST'
-                        
-                    },
-                    columns: [
-                        {data: 'id'},
-                        {data: 'name'},
-                        {data: 'port'},
-                        {data: 'type'},
-                        {data: 'entrypoint'},
-                    ]
+            var table;
+
+            var serviseList;
+            function loadServiceList() {
+                $.ajax({
+                    type: "post",
+                    //async: false,
+                    url: '/table/servicelist/action/get',
+                    //headers: {"Access-Control-Allow-Origin": "*"},
+                    success: function (data) {
+                        serviseList = JSON.parse(data);
+                        table = $('#services_tab').DataTable({
+                            processing: true,
+//                            serverSide: true,
+                            data: serviseList,
+                            columns: [
+                                {data: 'id'},
+                                {data: 'name'},
+                                {data: 'port'},
+                                {data: 'type'},
+                                {data: 'entrypoint'},
+                                {
+                                    "targets": -1,
+                                    "data": null,
+                                    "defaultContent": "<button>API DOCS</button>"
+                                }
+                            ],
+
+                        });
+                        $('#services_tab tbody').on('click', 'button', function () {
+                            var data = table.row($(this).parents('tr')).data();
+                            alert(data['name']);
+                        });
+
+
+
+                    }
                 });
+            }
+            $(document).ready(function () {
+
+
+
+
+                loadServiceList(serviseList);
             });
             function loadModule() {
                 $.ajax({
@@ -145,9 +173,23 @@ and open the template in the editor.
         <button  onclick="loadModule();">
             Загрузка сервиса
         </button>
+
+
         <div id="content">
+        </div >
+        <br>
+        <h3>Список Сервисов</h3>
+        <div style="width: 30%">
+            <table id="services_tab" class="table table-striped table-bordered ">
+                <thead>
+                <th>id</th>
+                <th>name</th>
+                <th>port</th>
+                <th>type</th>
+                <th>entypoint</th>
+                <th>action</th>
+                </thead>
+            </table>
         </div>
-        <table id="services_tab">
-        </table>
     </body>
 </html>
