@@ -59,10 +59,10 @@ and open the template in the editor.
                             //async: false,
                             url: "/showdocs",
                             //headers: {"Access-Control-Allow-Origin": "*"},
-                            data:parcel,
+                            data: parcel,
                             success: function (data) {
                                 window.open(data, '_blank');
-                                
+
                             }
                         });
 
@@ -76,17 +76,25 @@ and open the template in the editor.
                 loadServiceList();
             });
             function loadModule() {
-                $.ajax({
-                    type: "get",
-                    //async: false,
-                    url: "/loadModule",
-                    //headers: {"Access-Control-Allow-Origin": "*"},
-                    success: function (data) {
-                        //alert(data);
-                        document.getElementById("content").innerHTML = data;
-                    }
-                });
-
+                
+                
+                if (document.getElementById("content").childElementCount===0) {
+                    
+                    $.ajax({
+                        type: "get",
+                        //async: false,
+                        url: "/loadModule",
+                        //headers: {"Access-Control-Allow-Origin": "*"},
+                        success: function (data) {
+                            //alert(data);
+                            document.getElementById("content").innerHTML = data;
+                        }
+                    });
+                }
+                else{
+                    
+                    document.getElementById("content").innerHTML ='';
+                }
 
             }
 
