@@ -17,7 +17,7 @@ var upload = multer({dest: 'uploads/'});
 const YAML = require('yamljs');
 
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = YAML.load('./services/books/api/swagger/swagger.yaml');
+
 
 
 
@@ -56,7 +56,29 @@ const options = {
     }
 };
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
+
+
+app.post('/showdocs', function (req, res) {
+    var swaggerDocument = null;
+    if (req.body.servicename) {
+        YAML.load('./services/' + req.body.servicename + '/api/swagger/swagger.yaml', function (result)
+        {
+            if (result) {
+                swaggerDocument = result;
+                app.use('/' + req.body.servicename + '-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
+                res.send('/' + req.body.servicename + '-docs');
+            } else {
+                res.end("Ошибка: Документация найдена!");
+            }
+        });
+    } else {
+        res.end("Ошибка: Имя сервиса не передано!");
+    }
+
+    
+
+});
+
 
 
 
@@ -100,7 +122,7 @@ app.post('/table/:tableName/action/:action', function (req, res) {
     con.connect(function (err) {
         if (err)
             throw err;
-        console.log('MySQL Connected!');
+
 
     });
 
@@ -195,7 +217,7 @@ app.post('/table/:tableName/action/:action', function (req, res) {
             if (err)
                 res.end(JSON.stringify(err));
             res.end(JSON.stringify(result));
-           
+            //res.end(result);
             console.log(JSON.stringify(result));
 
         });
@@ -228,6 +250,50 @@ app.post('/table/:tableName/action/:action', function (req, res) {
 });
 
 //////////////////////////////////////////////
+
+app.get('/servicelist', function (req, res) {
+
+    var con = mysql.createConnection({
+        host: mySqlServerHost,
+        user: 'root',
+        password: 'death666',
+        database: 'appplatform'
+
+
+    });
+    con.connect(function (err) {
+        if (err)
+            throw err;
+
+
+    });
+
+
+
+
+    sqlStr = "select * from servicelist";
+
+
+
+    con.query(sqlStr, function (err, result) {
+        if (err)
+            res.end(JSON.stringify(err));
+        //res.end(JSON.stringify(result));
+        var parcel = {};
+        parcel.data = result;
+        parcel.recordsTotal = result.length;
+        parcel.recordsFiltered = result.length;
+        res.json(parcel);
+
+
+    });
+    con.end(function (err) {
+        if (err) {
+            return console.log("Ошибка: " + err.message);
+        }
+    });
+
+});
 
 
 app.post("/upload", upload.single('file'), function (req, res, next) {

@@ -18,51 +18,62 @@ and open the template in the editor.
         <script type="text/javascript"  src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
         <script>
-            var table;
+            var table = null;
 
-            var serviseList;
+
             function loadServiceList() {
-                $.ajax({
-                    type: "post",
-                    //async: false,
-                    url: '/table/servicelist/action/get',
-                    //headers: {"Access-Control-Allow-Origin": "*"},
-                    success: function (data) {
-                        serviseList = JSON.parse(data);
-                        table = $('#services_tab').DataTable({
-                            processing: true,
-//                            serverSide: true,
-                            data: serviseList,
-                            columns: [
-                                {data: 'id'},
-                                {data: 'name'},
-                                {data: 'port'},
-                                {data: 'type'},
-                                {data: 'entrypoint'},
-                                {
-                                    "targets": -1,
-                                    "data": null,
-                                    "defaultContent": "<button>API DOCS</button>"
-                                }
-                            ],
 
+
+                if (!table) {
+                    table = $('#services_tab').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+
+                        "ajax": {
+                            url: "/servicelist",
+                            dataType: "json",
+                            type: "get"
+
+                        },
+                        "columns": [
+                            {"data": "id"},
+                            {"data": "name"},
+                            {"data": "port"},
+                            {"data": "type"},
+                            {"data": "entrypoint"},
+                            {
+                                "targets": -1,
+                                "data": null,
+                                "defaultContent": "<button>API DOCS</button>"
+                            }
+                        ]
+
+
+                    });
+                    $('#services_tab tbody').on('click', 'button', function () {
+                        var data = table.row($(this).parents('tr')).data();
+                        var parcel = {};
+                        parcel.servicename = data['name'];
+                        $.ajax({
+                            type: "post",
+                            //async: false,
+                            url: "/showdocs",
+                            //headers: {"Access-Control-Allow-Origin": "*"},
+                            data:parcel,
+                            success: function (data) {
+                                window.open(data, '_blank');
+                                
+                            }
                         });
-                        $('#services_tab tbody').on('click', 'button', function () {
-                            var data = table.row($(this).parents('tr')).data();
-                            alert(data['name']);
-                        });
 
+                    });
+                } else {
+                    table.ajax.reload();
+                }
 
-
-                    }
-                });
             }
             $(document).ready(function () {
-
-
-
-
-                loadServiceList(serviseList);
+                loadServiceList();
             });
             function loadModule() {
                 $.ajax({
@@ -143,7 +154,7 @@ and open the template in the editor.
                                             success: function (data2) {
                                                 alert(data2);
                                                 document.getElementById("content").innerHTML = "";
-
+                                                loadServiceList();
                                             }
                                         });
                                     } else {
