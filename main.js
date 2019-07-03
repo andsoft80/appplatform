@@ -56,7 +56,10 @@ const options = {
     }
 };
 
-
+app.all('/*', function (req, res, next) {
+    console.log('Got request!');
+    next();
+});
 
 app.post('/showdocs', function (req, res) {
     var swaggerDocument = null;
