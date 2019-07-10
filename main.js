@@ -57,7 +57,7 @@ const options = {
 };
 
 app.all('/*', function (req, res, next) {
-    console.log('Got request!');
+    
     next();
 });
 
@@ -117,7 +117,7 @@ app.post('/table/:tableName/action/:action', function (req, res) {
     var con = mysql.createConnection({
         host: mySqlServerHost,
         user: 'root',
-        password: 'death666',
+        password: 'root',
         database: 'appplatform'
 
 
@@ -259,7 +259,7 @@ app.get('/servicelist', function (req, res) {
     var con = mysql.createConnection({
         host: mySqlServerHost,
         user: 'root',
-        password: 'death666',
+        password: 'root',
         database: 'appplatform'
 
 
