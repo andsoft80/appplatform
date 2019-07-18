@@ -45,6 +45,11 @@ and open the template in the editor.
                                 "targets": -1,
                                 "data": null,
                                 "defaultContent": "<button>API DOCS</button>"
+                            },
+                            {
+                                "targets": -1,
+                                "data": null,
+                                "defaultContent": "<button>Start</button>"
                             }
                         ]
 
@@ -76,10 +81,10 @@ and open the template in the editor.
                 loadServiceList();
             });
             function loadModule() {
-                
-                
-                if (document.getElementById("content").childElementCount===0) {
-                    
+
+
+                if (document.getElementById("content").childElementCount === 0) {
+
                     $.ajax({
                         type: "get",
                         //async: false,
@@ -90,10 +95,9 @@ and open the template in the editor.
                             document.getElementById("content").innerHTML = data;
                         }
                     });
-                }
-                else{
-                    
-                    document.getElementById("content").innerHTML ='';
+                } else {
+
+                    document.getElementById("content").innerHTML = '';
                 }
 
             }
@@ -206,6 +210,7 @@ and open the template in the editor.
                 <th>port</th>
                 <th>type</th>
                 <th>entypoint</th>
+                <th>docs</th>
                 <th>action</th>
                 </thead>
             </table>
