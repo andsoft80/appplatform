@@ -44,18 +44,18 @@ and open the template in the editor.
                             {
                                 "targets": -1,
                                 "data": null,
-                                "defaultContent": "<button>API DOCS</button>"
+                                "defaultContent": "<button id='docs_btn'>API DOCS</button>"
                             },
                             {
                                 "targets": -1,
                                 "data": null,
-                                "defaultContent": "<button>Start</button>"
+                                "defaultContent": "<button id='start_btn'>Start</button>"
                             }
                         ]
 
 
                     });
-                    $('#services_tab tbody').on('click', 'button', function () {
+                    $('#services_tab tbody').on('click', '#docs_btn', function () {
                         var data = table.row($(this).parents('tr')).data();
                         var parcel = {};
                         parcel.servicename = data['name'];
@@ -67,6 +67,24 @@ and open the template in the editor.
                             data: parcel,
                             success: function (data) {
                                 window.open(data, '_blank');
+
+                            }
+                        });
+
+                    });
+                    $('#services_tab tbody').on('click', '#start_btn', function () {
+                        var data = table.row($(this).parents('tr')).data();
+                        var parcel = {};
+                        parcel.servicename = data['name'];
+                        parcel.entrypoint = data['entrypoint'];
+                        $.ajax({
+                            type: "post",
+                            //async: false,
+                            url: "/startservice",
+                            //headers: {"Access-Control-Allow-Origin": "*"},
+                            data: parcel,
+                            success: function (data) {
+                               alert(data);
 
                             }
                         });

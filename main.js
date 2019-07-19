@@ -15,7 +15,7 @@ const path = require('path');
 const multer = require("multer");
 var upload = multer({dest: 'uploads/'});
 const YAML = require('yamljs');
-
+var cmd  = require('node-command-line');
 const swaggerUi = require('swagger-ui-express');
 
 
@@ -352,7 +352,17 @@ app.post('/unzip', function (req, res) {
 });
 
 app.post("/startservice", function (req, res) {
-
+    if (req.body.servicename && req.body.entrypoint) {
+    //cmd.run('node --version');
+        var s_path = path.join(__dirname, 'services', req.body.servicename, req.body.entrypoint);
+        //console.log(s_path);
+        cmd.run('pm2 start '+s_path+' -i max');
+        res.send('Сервис запущен!');
+    }
+    else{
+        res.send('Ошибка : имя сервиса или точка входа не указана!');
+    }
+        
 
 });
 
