@@ -20,7 +20,7 @@
         "zlib": "1.0.5",
         "unzip": "0.1.11",
         "bcryptjs": "2.4.3",
-        "nodemailer": "5.1.1",
+        "nodemailer": "6.4.16",
         "express-session": "1.15.6",
         "express-mysql-session": "2.1.0",
         "mysql": "2.16.0",
